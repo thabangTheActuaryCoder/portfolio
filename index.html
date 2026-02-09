@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Baloyi Thabang Bongani Junior</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+            background: #1a1a1a;
+            cursor: default;
+        }
+
+        /* ============================================
+           HERO CONTAINER
+           ============================================ */
+        .hero {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            opacity: 0;
+            animation: heroFadeIn 1.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes heroFadeIn {
+            to { opacity: 1; }
+        }
+
+        /* ============================================
+           LAYER 1 — BASE BACKGROUND (IMAGE 1: BCom)
+           ============================================ */
+        .bg-layer {
+            position: absolute;
+            inset: -3%;
+            width: 106%;
+            height: 106%;
+            background-image: url('images/bcom-graduation.jpg');
+            background-size: cover;
+            background-position: center 15%;
+            will-change: transform;
+        }
+
+        .bg-layer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg, #c9b99a 0%, #8a7b6b 35%, #5a4d3f 70%, #2c2420 100%);
+            z-index: -1;
+        }
+
+        .bg-layer::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(160deg, rgba(255,255,255,0.12) 0%, transparent 40%),
+                radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.2) 100%);
+            pointer-events: none;
+        }
+
+        /* ============================================
+           LAYER 2 — WAVE OVERLAY
+           ============================================ */
+        .wave-layer {
+            position: absolute;
+            inset: 0;
+            opacity: 0.045;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        /* ============================================
+           LAYER 3 — REVEAL (IMAGE 2: BSc Honours)
+           CSS mask driven by JS radial-gradients
+           ============================================ */
+        .reveal-layer {
+            position: absolute;
+            inset: -3%;
+            width: 106%;
+            height: 106%;
+            background-image: url('images/bsc-honours-graduation.jpg');
+            background-size: cover;
+            background-position: center 15%;
+            pointer-events: none;
+            will-change: mask-image, -webkit-mask-image;
+            -webkit-mask-image: none;
+            mask-image: none;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+        }
+
+        /* ============================================
+           LAYER 4 — UI
+           ============================================ */
+        .ui-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .ui-layer a { pointer-events: auto; }
+
+        /* --- Name --- */
+        .name {
+            position: absolute;
+            top: 8vh;
+            left: 6vw;
+            font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+            font-weight: 500;
+            font-size: clamp(2.2rem, 4.8vw, 4.5rem);
+            line-height: 1.12;
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+            transition: color 0.3s ease;
+            opacity: 0;
+            transform: translateY(24px);
+            animation: slideUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+        }
+
+        .name-line { display: block; }
+        .name-line:nth-child(2) { padding-left: 0.05em; }
+        .name-line:nth-child(3) { padding-left: 0.1em; font-style: italic; font-weight: 400; }
+
+        .identity {
+            display: block;
+            margin-top: 1.8rem;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 300;
+            font-size: clamp(0.65rem, 0.9vw, 0.85rem);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #666;
+            font-style: normal;
+            transition: color 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.2s forwards;
+        }
+
+        /* --- Top Right Links --- */
+        .top-links {
+            position: absolute;
+            top: 8.5vh;
+            right: 6vw;
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .top-link {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: clamp(0.75rem, 0.9vw, 0.9rem);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            text-decoration: none;
+            transition: color 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            position: relative;
+        }
+
+        .top-link:nth-child(1) { animation: fadeIn 1s ease-out 0.8s forwards; }
+        .top-link:nth-child(2) { animation: fadeIn 1s ease-out 0.9s forwards; }
+        .top-link:nth-child(3) { animation: fadeIn 1s ease-out 1.0s forwards; }
+
+        .top-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .top-link:hover::after { width: 100%; }
+
+        /* --- Social Icons --- */
+        .socials {
+            position: absolute;
+            bottom: 6vh;
+            right: 6vw;
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        .socials a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            color: #1a1a1a;
+            transition: color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+        }
+
+        .socials a:nth-child(1) { animation: fadeIn 0.8s ease-out 1.0s forwards; }
+        .socials a:nth-child(2) { animation: fadeIn 0.8s ease-out 1.15s forwards; }
+        .socials a:nth-child(3) { animation: fadeIn 0.8s ease-out 1.3s forwards; }
+
+        .socials a:hover { opacity: 1 !important; transform: translateY(-2px); }
+        .socials svg { width: 100%; height: 100%; fill: currentColor; }
+
+        /* ============================================
+           INVERSION STATE
+           ============================================ */
+        .inverted { color: #ffffff !important; }
+        .inverted .identity { color: rgba(255,255,255,0.65) !important; }
+        .socials a.inverted { color: #ffffff !important; }
+
+        /* ============================================
+           ENTRANCE ANIMATIONS
+           ============================================ */
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 0.7; }
+        }
+
+        /* ============================================
+           MOBILE
+           ============================================ */
+        .mobile-tap-hint {
+            position: absolute;
+            bottom: 14vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #999;
+            transition: opacity 1.5s ease;
+            display: none;
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .mobile-tap-hint { display: block; }
+        }
+
+        .mobile-reveal-overlay {
+            position: absolute;
+            inset: -3%;
+            width: 106%;
+            height: 106%;
+            background-image: url('images/bsc-honours-graduation.jpg');
+            background-size: cover;
+            background-position: center 15%;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+            display: none;
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .mobile-reveal-overlay { display: block; }
+            .reveal-layer { display: none; }
+        }
+
+        .mobile-reveal-overlay.active { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div class="hero" id="hero">
+
+        <!-- Layer 1: Base Background (IMAGE 1 — BCom Graduation) -->
+        <div class="bg-layer" id="bgLayer"></div>
+
+        <!-- Mobile-only crossfade layer -->
+        <div class="mobile-reveal-overlay" id="mobileReveal"></div>
+
+        <!-- Layer 2: Wave Overlay -->
+        <canvas class="wave-layer" id="waveCanvas"></canvas>
+
+        <!-- Layer 3: Reveal div (IMAGE 2 — BSc Honours, masked by blob) -->
+        <div class="reveal-layer" id="revealLayer"></div>
+
+        <!-- Layer 4: UI -->
+        <div class="ui-layer" id="uiLayer">
+            <div class="name" id="nameBlock">
+                <span class="name-line">Baloyi</span>
+                <span class="name-line">Thabang Bongani</span>
+                <span class="name-line">Junior</span>
+                <span class="identity" id="identityLine">AI Developer &amp; Data Scientist &bull; MSc Mathematical Statistics (UFS)</span>
+            </div>
+
+            <div class="top-links" id="topLinks">
+                <a href="resume.pdf" target="_blank" class="top-link">Resume</a>
+                <a href="honours-thesis.pdf" target="_blank" class="top-link">Honours Thesis</a>
+                <a href="masters-thesis.pdf" target="_blank" class="top-link">Masters Thesis</a>
+            </div>
+
+            <div class="socials" id="socials">
+                <a href="https://www.linkedin.com/in/baloyi-thabang-bongani-junior-2622b0286/" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-icon">
+                    <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="https://github.com/thabangTheActuaryCoder" target="_blank" rel="noopener" aria-label="GitHub" class="social-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                </a>
+                <a href="https://x.com/user01012024" target="_blank" rel="noopener" aria-label="X (Twitter)" class="social-icon">
+                    <svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+                </a>
+            </div>
+
+            <div class="mobile-tap-hint" id="tapHint">Tap to reveal</div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        'use strict';
+
+        // =============================================
+        // CONFIGURATION
+        // =============================================
+        var CONFIG = {
+            blob: {
+                baseRadius: 130,
+                springStiffness: 0.07,
+                damping: 0.82,
+                wobbleSpeed: 1.2,
+                wobbleAmount: 0.13,
+                subCircles: 7,
+                featherInner: 0.25,
+                featherOuter: 1.0
+            },
+            trail: {
+                maxCount: 20,
+                spawnThreshold: 3,
+                spawnRate: 0.35,
+                minRadius: 15,
+                maxRadius: 55,
+                fadeSpeed: 0.012,
+                spreadFactor: 0.5
+            },
+            wave: {
+                lineCount: 7,
+                amplitude: 25,
+                frequency: 0.0035,
+                cursorInfluence: 0.15
+            },
+            parallax: {
+                background: 0.02,
+                waves: 0.035,
+                ui: 0.012
+            },
+            inversion: {
+                padding: 30
+            }
+        };
+
+        // =============================================
+        // STATE
+        // =============================================
+        var state = {
+            mouse: { x: -9999, y: -9999 },
+            blob: { x: -9999, y: -9999, vx: 0, vy: 0 },
+            trails: [],
+            time: 0,
+            mouseEntered: false,
+            isTouch: false,
+            mobileRevealed: false,
+            parallaxSmooth: { x: 0, y: 0 }
+        };
+
+        // =============================================
+        // DOM REFERENCES
+        // =============================================
+        var bgLayer = document.getElementById('bgLayer');
+        var waveCanvas = document.getElementById('waveCanvas');
+        var revealLayer = document.getElementById('revealLayer');
+        var uiLayer = document.getElementById('uiLayer');
+        var nameBlock = document.getElementById('nameBlock');
+        var topLinks = document.getElementById('topLinks');
+        var topLinkEls = document.querySelectorAll('.top-link');
+        var socialIcons = document.querySelectorAll('.social-icon');
+        var tapHint = document.getElementById('tapHint');
+        var mobileReveal = document.getElementById('mobileReveal');
+
+        var waveCtx = waveCanvas.getContext('2d');
+
+        // =============================================
+        // RESIZE
+        // =============================================
+        function resize() {
+            var dpr = window.devicePixelRatio || 1;
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            waveCanvas.width = w * dpr;
+            waveCanvas.height = h * dpr;
+            waveCanvas.style.width = w + 'px';
+            waveCanvas.style.height = h + 'px';
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+
+        // =============================================
+        // INPUT HANDLERS
+        // =============================================
+        document.addEventListener('mousemove', function (e) {
+            if (!state.mouseEntered) {
+                state.mouseEntered = true;
+                state.blob.x = e.clientX;
+                state.blob.y = e.clientY;
+            }
+            state.mouse.x = e.clientX;
+            state.mouse.y = e.clientY;
+        });
+
+        document.addEventListener('mouseleave', function () {
+            state.mouseEntered = false;
+            state.mouse.x = -9999;
+            state.mouse.y = -9999;
+            revealLayer.style.webkitMaskImage = 'none';
+            revealLayer.style.maskImage = 'none';
+        });
+
+        // Mobile / touch
+        if (('ontouchstart' in window) || (navigator.maxTouchPoints > 0)) {
+            state.isTouch = true;
+
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+                var t = e.touches[0];
+                if (!state.mouseEntered) {
+                    state.mouseEntered = true;
+                    state.blob.x = t.clientX;
+                    state.blob.y = t.clientY;
+                }
+                state.mouse.x = t.clientX;
+                state.mouse.y = t.clientY;
+            }, { passive: false });
+
+            document.addEventListener('touchstart', function (e) {
+                if (e.touches.length === 1) {
+                    state.mouse.x = e.touches[0].clientX;
+                    state.mouse.y = e.touches[0].clientY;
+                    if (!state.mouseEntered) {
+                        state.mouseEntered = true;
+                        state.blob.x = state.mouse.x;
+                        state.blob.y = state.mouse.y;
+                    }
+                }
+            });
+
+            var lastTap = 0;
+            document.addEventListener('touchend', function () {
+                var now = Date.now();
+                if (now - lastTap < 350) {
+                    state.mobileRevealed = !state.mobileRevealed;
+                    mobileReveal.classList.toggle('active', state.mobileRevealed);
+                    if (tapHint) tapHint.style.opacity = '0';
+                    if (state.mobileRevealed) {
+                        nameBlock.classList.add('inverted');
+                        topLinkEls.forEach(function (l) { l.classList.add('inverted'); });
+                        socialIcons.forEach(function (ic) { ic.classList.add('inverted'); });
+                    } else {
+                        nameBlock.classList.remove('inverted');
+                        topLinkEls.forEach(function (l) { l.classList.remove('inverted'); });
+                        socialIcons.forEach(function (ic) { ic.classList.remove('inverted'); });
+                    }
+                }
+                lastTap = now;
+            });
+        }
+
+        // =============================================
+        // BLOB PHYSICS
+        // =============================================
+        function updateBlob() {
+            if (!state.mouseEntered) return;
+            var dx = state.mouse.x - state.blob.x;
+            var dy = state.mouse.y - state.blob.y;
+            state.blob.vx += dx * CONFIG.blob.springStiffness;
+            state.blob.vy += dy * CONFIG.blob.springStiffness;
+            state.blob.vx *= CONFIG.blob.damping;
+            state.blob.vy *= CONFIG.blob.damping;
+            state.blob.x += state.blob.vx;
+            state.blob.y += state.blob.vy;
+        }
+
+        // =============================================
+        // TRAIL SYSTEM
+        // =============================================
+        function updateTrails() {
+            if (!state.mouseEntered) return;
+            var speed = Math.sqrt(state.blob.vx * state.blob.vx + state.blob.vy * state.blob.vy);
+
+            if (speed > CONFIG.trail.spawnThreshold && Math.random() < CONFIG.trail.spawnRate) {
+                var spreadX = (Math.random() - 0.5) * speed * CONFIG.trail.spreadFactor;
+                var spreadY = (Math.random() - 0.5) * speed * CONFIG.trail.spreadFactor;
+                var radiusScale = Math.min(speed / 25, 1);
+                var radius = CONFIG.trail.minRadius +
+                    (CONFIG.trail.maxRadius - CONFIG.trail.minRadius) * radiusScale * (0.3 + Math.random() * 0.7);
+
+                state.trails.push({
+                    x: state.blob.x - state.blob.vx * 0.3 + spreadX,
+                    y: state.blob.y - state.blob.vy * 0.3 + spreadY,
+                    radius: radius,
+                    opacity: 0.6 + Math.random() * 0.3,
+                    fadeSpeed: CONFIG.trail.fadeSpeed + speed * 0.0008
+                });
+            }
+
+            for (var i = state.trails.length - 1; i >= 0; i--) {
+                state.trails[i].opacity -= state.trails[i].fadeSpeed;
+                state.trails[i].radius *= 0.997;
+                if (state.trails[i].opacity <= 0) state.trails.splice(i, 1);
+            }
+            while (state.trails.length > CONFIG.trail.maxCount) state.trails.shift();
+        }
+
+        // =============================================
+        // CSS MASK — REVEAL IMAGE 2 VIA BLOB
+        // Builds radial-gradient mask from blob + trails
+        // =============================================
+        function updateRevealMask() {
+            if (!state.mouseEntered) return;
+
+            var gradients = [];
+            var bx = state.blob.x;
+            var by = state.blob.y;
+            var br = CONFIG.blob.baseRadius;
+            var ws = CONFIG.blob.wobbleSpeed;
+            var wa = CONFIG.blob.wobbleAmount;
+            var t = state.time;
+            var n = CONFIG.blob.subCircles;
+
+            // Organic blob: cluster of overlapping offset circles
+            // Center circle
+            gradients.push(
+                'radial-gradient(circle ' + (br * 0.75) + 'px at ' + bx + 'px ' + by + 'px, rgba(0,0,0,1) 30%, transparent 80%)'
+            );
+
+            // Surrounding wobbling sub-circles
+            for (var i = 0; i < n; i++) {
+                var angle = (i / n) * Math.PI * 2;
+                var noise =
+                    Math.sin(angle * 2 + t * ws) * wa * 0.5 +
+                    Math.sin(angle * 3 - t * ws * 1.4) * wa * 0.35 +
+                    Math.sin(angle * 5 + t * ws * 0.7) * wa * 0.15;
+                var offset = br * 0.35 * (1 + noise);
+                var cx = bx + Math.cos(angle) * offset;
+                var cy = by + Math.sin(angle) * offset;
+                var sr = br * (0.6 + noise * 0.3);
+                gradients.push(
+                    'radial-gradient(circle ' + sr + 'px at ' + cx + 'px ' + cy + 'px, rgba(0,0,0,1) 20%, transparent 75%)'
+                );
+            }
+
+            // Trail blobs
+            for (var j = 0; j < state.trails.length; j++) {
+                var tr = state.trails[j];
+                gradients.push(
+                    'radial-gradient(circle ' + tr.radius + 'px at ' + tr.x + 'px ' + tr.y + 'px, rgba(0,0,0,' + tr.opacity.toFixed(3) + ') 15%, transparent 75%)'
+                );
+            }
+
+            var mask = gradients.join(', ');
+            revealLayer.style.webkitMaskImage = mask;
+            revealLayer.style.maskImage = mask;
+        }
+
+        // =============================================
+        // RENDER WAVES
+        // =============================================
+        function renderWaves() {
+            var dpr = window.devicePixelRatio || 1;
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+
+            waveCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            waveCtx.clearRect(0, 0, w, h);
+
+            var cx = (state.mouseEntered ? state.mouse.x : w / 2) / w - 0.5;
+            var cy = (state.mouseEntered ? state.mouse.y : h / 2) / h - 0.5;
+
+            waveCtx.lineWidth = 0.6;
+
+            for (var l = 0; l < CONFIG.wave.lineCount; l++) {
+                var baseY = (h / (CONFIG.wave.lineCount + 1)) * (l + 1);
+                var phase = l * 0.9;
+                var opac = 0.25 + Math.sin(l * 0.7 + state.time * 0.3) * 0.1;
+
+                waveCtx.strokeStyle = 'rgba(80, 75, 70, ' + opac + ')';
+                waveCtx.beginPath();
+
+                for (var x = 0; x <= w; x += 4) {
+                    var nx = x / w;
+                    var amp = CONFIG.wave.amplitude * (1 + Math.sin(nx * Math.PI) * 0.4);
+                    var cursorWarp = Math.sin((nx - cx) * 5) * cy * 15 * CONFIG.wave.cursorInfluence * (l * 0.3 + 1);
+                    var y = baseY +
+                        Math.sin(x * CONFIG.wave.frequency + state.time + phase) * amp +
+                        Math.sin(x * CONFIG.wave.frequency * 2.3 + state.time * 1.4 + phase) * amp * 0.25 +
+                        Math.cos(x * CONFIG.wave.frequency * 0.7 - state.time * 0.6 + phase) * amp * 0.15 +
+                        cursorWarp;
+
+                    if (x === 0) waveCtx.moveTo(x, y);
+                    else waveCtx.lineTo(x, y);
+                }
+                waveCtx.stroke();
+            }
+        }
+
+        // =============================================
+        // PARALLAX
+        // =============================================
+        function updateParallax() {
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var mx = state.mouseEntered ? state.mouse.x : w / 2;
+            var my = state.mouseEntered ? state.mouse.y : h / 2;
+            var cx = (mx / w - 0.5) * 2;
+            var cy = (my / h - 0.5) * 2;
+
+            state.parallaxSmooth.x += (cx - state.parallaxSmooth.x) * 0.04;
+            state.parallaxSmooth.y += (cy - state.parallaxSmooth.y) * 0.04;
+
+            var px = state.parallaxSmooth.x;
+            var py = state.parallaxSmooth.y;
+
+            bgLayer.style.transform = 'translate3d(' + (-px * CONFIG.parallax.background * 100) + 'px,' + (-py * CONFIG.parallax.background * 100) + 'px,0)';
+            waveCanvas.style.transform = 'translate3d(' + (-px * CONFIG.parallax.waves * 100) + 'px,' + (-py * CONFIG.parallax.waves * 100) + 'px,0)';
+            uiLayer.style.transform = 'translate3d(' + (-px * CONFIG.parallax.ui * 100) + 'px,' + (-py * CONFIG.parallax.ui * 100) + 'px,0)';
+        }
+
+        // =============================================
+        // COLOR INVERSION
+        // =============================================
+        function checkBlobOverlap(el) {
+            if (!state.mouseEntered) return false;
+            var rect = el.getBoundingClientRect();
+            var bx = state.blob.x;
+            var by = state.blob.y;
+            var pad = CONFIG.inversion.padding;
+            var closestX = Math.max(rect.left - pad, Math.min(bx, rect.right + pad));
+            var closestY = Math.max(rect.top - pad, Math.min(by, rect.bottom + pad));
+            var dx = bx - closestX;
+            var dy = by - closestY;
+            return Math.sqrt(dx * dx + dy * dy) < CONFIG.blob.baseRadius * 0.85;
+        }
+
+        function updateColorInversion() {
+            if (state.isTouch && !state.mouseEntered) return;
+
+            nameBlock.classList.toggle('inverted', checkBlobOverlap(nameBlock));
+            topLinks.classList.toggle('inverted', checkBlobOverlap(topLinks));
+            for (var j = 0; j < topLinkEls.length; j++) {
+                topLinkEls[j].classList.toggle('inverted', checkBlobOverlap(topLinkEls[j]));
+            }
+            for (var i = 0; i < socialIcons.length; i++) {
+                socialIcons[i].classList.toggle('inverted', checkBlobOverlap(socialIcons[i]));
+            }
+        }
+
+        // =============================================
+        // ANIMATION LOOP
+        // =============================================
+        var lastTime = performance.now();
+
+        function animate(now) {
+            var dt = (now - lastTime) / 1000;
+            lastTime = now;
+            state.time += dt;
+
+            updateBlob();
+            updateTrails();
+            updateParallax();
+            updateRevealMask();
+            renderWaves();
+            updateColorInversion();
+
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+    })();
+    </script>
+</body>
+</html>
